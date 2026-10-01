@@ -1,0 +1,21 @@
+import Link from "next/link";
+import { Ticket, CheckCircle2, Clock3, ListChecks, ArrowUpRight } from "lucide-react";
+import { requireOrganizationAccess } from "@/lib/tenancy/context";
+import { db } from "@/lib/db";
+import { ticketVisibilityWhere } from "@/server/tickets/access";
+import { ownTaskScope } from "@/server/work/resources";
+import { PageHeader } from "@/components/ui/page-header";
+import { Button } from "@/components/ui/button";
+export default async function Page() {
+  const ctx = await requireOrganizationAccess(); const scope = await ticketVisibilityWhere(ctx);
+  const [total, open, resolved, breached, tasks, recent] = await Promise.all([
+    db.ticket.count({ where: scope }), db.ticket.count({ where: { AND: [scope, { status: { category: { notIn: ["RESOLVED", "CLOSED"] } } }] } }), db.ticket.count({ where: { AND: [scope, { status: { category: { in: ["RESOLVED", "CLOSED"] } } }] } }), db.ticket.count({ where: { AND: [scope, { slaState: "BREACHED" }] } }),
+    ctx.can("tasks.view") ? db.task.count({ where: { organizationId: ctx.organization.id, ...ownTaskScope(ctx), status: { not: "COMPLETED" }, assigneeId: ctx.user.id } }) : 0,
+    db.ticket.findMany({ where: scope, include: { status: true, assignee: { select: { name: true } } }, orderBy: { updatedAt: "desc" }, take: 6 }),
+  ]);
+  const cards = [{ label: "Open tickets", value: open, icon: Ticket, href: "/tickets", color: "text-primary" }, { label: "Resolved", value: resolved, icon: CheckCircle2, href: "/tickets", color: "text-emerald-600" }, { label: "SLA breached", value: breached, icon: Clock3, href: "/tickets", color: "text-amber-600" }, { label: "My active tasks", value: tasks, icon: ListChecks, href: "/tasks", color: "text-sky-600" }];
+  return <><PageHeader title={`Good to see you, ${ctx.user.name.split(" ")[0]}`} description={`${ctx.organization.name} · Here’s what needs your attention today.`} actions={ctx.can("tickets.create") && <Button asChild><Link href="/tickets/new">New ticket</Link></Button>} />
+    <div className="mb-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{cards.map(c => <Link href={c.href} key={c.label} className="rounded-xl border bg-card p-5 shadow-xs hover:border-primary/40"><div className="mb-4 flex justify-between"><span className="text-sm text-muted-foreground">{c.label}</span><c.icon className={`size-5 ${c.color}`} /></div><p className="text-3xl font-semibold tabular-nums">{c.value}</p></Link>)}</div>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]"><section className="rounded-xl border bg-card"><div className="flex items-center justify-between border-b p-5"><h2 className="font-semibold">Recently updated</h2><Link href="/tickets" className="text-sm text-primary">View all <ArrowUpRight className="inline size-4" /></Link></div>{recent.map(t => <Link className="flex items-center justify-between gap-4 border-b p-5 last:border-0 hover:bg-muted/30" href={`/tickets/${t.number}`} key={t.id}><div><p className="text-sm font-medium">#{t.number} · {t.subject}</p><p className="mt-1 text-xs text-muted-foreground">{t.assignee?.name ?? "Unassigned"}</p></div><span className="shrink-0 rounded-md bg-muted px-2 py-1 text-xs">{t.status.name}</span></Link>)}{!recent.length && <p className="p-8 text-sm text-muted-foreground">Your first request will appear here.</p>}</section>
+      <aside className="space-y-5"><section className="rounded-xl bg-primary p-6 text-primary-foreground"><p className="text-xs font-medium uppercase tracking-wider opacity-70">Nexora</p><h2 className="mt-2 text-xl font-semibold">Connect. Assign. Achieve.</h2><p className="mt-3 text-sm opacity-85">One clear place for service requests and everyday work.</p><Button asChild variant="secondary" className="mt-5"><Link href="/my-work">Open my work</Link></Button></section><section className="rounded-xl border bg-card p-5"><h2 className="font-semibold">Workspace overview</h2><p className="mt-3 text-sm text-muted-foreground">{total} tickets tracked · {ctx.membership.roleName}</p><div className="mt-4 flex flex-col gap-3 text-sm"><Link href="/knowledge" className="text-primary">Find an answer →</Link><Link href="/help" className="text-primary">How to use Nexora →</Link></div></section></aside></div></>;
+}

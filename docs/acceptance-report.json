@@ -1,0 +1,305 @@
+{
+  "time": "2026-10-01T02:45:03.222Z",
+  "checks": [
+    {
+      "name": "Database health",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Anonymous API denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "Tester sign-in",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/dashboard",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/tickets",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/tickets/new",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/my-work",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/tasks",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/tasks/new",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/projects",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/teams",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/customers",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/assets",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/knowledge",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/approvals",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/reports",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/notifications",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/profile",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/help",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/organization",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/users",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/roles",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/teams",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/departments",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/locations",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/categories",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/priorities",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/statuses",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/forms",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/custom-fields",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/templates",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/automations",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/sla",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/business-hours",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/holidays",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/email",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/email-templates",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/integrations",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/api",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/webhooks",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/branding",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/security",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/audit-logs",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/settings/billing",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/portal/tickets",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "/portal/knowledge",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Invalid bearer rejected despite session",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "name": "Missing-origin mutation denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Presigned storage upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Upload completion persisted",
+      "passed": true,
+      "status": 201
+    },
+    {
+      "name": "Authorized file download",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Acceptance attachment cleaned up",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Customer sign-in",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Customer /portal/tickets",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Customer /portal/tickets/new",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Customer /portal/knowledge",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Customer redirected away from staff settings",
+      "passed": true,
+      "status": 307
+    },
+    {
+      "name": "Customer cannot read employee ticket",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "name": "Customer ticket API exposes only public messages",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

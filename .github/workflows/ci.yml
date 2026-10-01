@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5433/postgres?sslmode=disable&connection_limit=1&pgbouncer=true
+      DIRECT_URL: postgresql://postgres:postgres@127.0.0.1:5433/postgres?sslmode=disable&connection_limit=1&pgbouncer=true
+      AUTH_SECRET: ci-only-secret-not-used-in-production-000000000000
+      NEXTAUTH_SECRET: ci-only-secret-not-used-in-production-000000000000
+      NEXTAUTH_URL: http://localhost:3000
+      APP_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Import and dependency integrity
+        run: npm run audit:repository
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit & integration tests
+        run: npm test
+      - name: Build
+        run: npm run build
+
+  # Vercel deploys on push via its Git integration; this job only runs production
+  # migrations after checks pass (requires repo secrets NEON_DIRECT_URL / NEON_DATABASE_URL).
+  migrate:
+    needs: verify
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Apply migrations (non-destructive, prisma migrate deploy)
+        env:
+          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.NEON_DIRECT_URL }}
+        run: |
+          if [ -z "$DIRECT_URL" ]; then echo "NEON_DIRECT_URL secret not set; skipping"; exit 0; fi
+          npx prisma migrate deploy

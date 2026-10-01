@@ -1,0 +1,5 @@
+import { requireOrganizationAccess } from "@/lib/tenancy/context";
+import { db } from "@/lib/db";
+import { sanitizeHtml } from "@/lib/sanitize";
+import { PageHeader } from "@/components/ui/page-header";
+export default async function Page() { const ctx = await requireOrganizationAccess({ allowCustomer: true }); const articles = await db.knowledgeArticle.findMany({ where: { organizationId: ctx.organization.id, status: "PUBLISHED", visibility: "PUBLIC" }, orderBy: { title: "asc" }, take: 100 }); return <><PageHeader title="Knowledge base" description="Answers and guides from your service team." /><div className="space-y-4">{articles.map(a => <details className="rounded-xl border bg-card p-5" key={a.id}><summary className="cursor-pointer font-semibold">{a.title}</summary><div className="prose prose-sm mt-5 max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: sanitizeHtml(a.contentHtml) }} /></details>)}{!articles.length && <p className="text-muted-foreground">No public articles published yet.</p>}</div></>; }

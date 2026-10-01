@@ -1,0 +1,5 @@
+import { requirePagePermission } from "@/lib/tenancy/context";
+import { db } from "@/lib/db";
+import { notFound } from "next/navigation";
+import { PageHeader } from "@/components/ui/page-header";
+export default async function Page({ params }: { params: Promise<{ id: string }> }) { const ctx = await requirePagePermission("users.view"); const m = await db.membership.findFirst({ where: { organizationId: ctx.organization.id, userId: (await params).id }, include: { user: { select: { name: true, email: true } }, role: { select: { name: true } }, department: { select: { name: true } } } }); if (!m) notFound(); return <><PageHeader title={m.user.name} description={m.role.name} /><dl className="space-y-4 rounded-xl border bg-card p-6"><div><dt className="text-xs text-muted-foreground">Email</dt><dd>{m.user.email}</dd></div><div><dt className="text-xs text-muted-foreground">Department</dt><dd>{m.department?.name ?? "—"}</dd></div><div><dt className="text-xs text-muted-foreground">Membership</dt><dd>{m.status}</dd></div></dl></>; }
